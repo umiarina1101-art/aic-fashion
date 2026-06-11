@@ -1,10 +1,10 @@
 FROM php:8.2-apache
 
-# Fix error MPM - WAJIB ADA INI
-RUN a2dismod mpm_event mpm_worker mpm_prefork \
-    && a2enmod mpm_prefork
+# Fix MPM dengan cara berbeda
+RUN sed -i 's/^/#/' /etc/apache2/mods-enabled/mpm_event.load 2>/dev/null || true
+RUN sed -i 's/^/#/' /etc/apache2/mods-enabled/mpm_event.conf 2>/dev/null || true
 
-# Aktifkan mod_rewrite
+RUN a2enmod mpm_prefork
 RUN a2enmod rewrite
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
