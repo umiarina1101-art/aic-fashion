@@ -1,17 +1,15 @@
-FROM php:8.2-apache
+FROM dunglas/frankenphp:php8.4-bookworm
 
-RUN rm -f /etc/apache2/mods-enabled/mpm_*.load \
-          /etc/apache2/mods-enabled/mpm_*.conf
+RUN install-php-extensions mysqli pdo_mysql
 
-RUN ln -s /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load
-RUN ln -s /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN a2enmod rewrite
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+WORKDIR /app
 
-COPY . /var/www/html/
-RUN chown -R www-data:www-data /var/www/html/
+COPY . /app
 
-EXPOSE 80
+RUN composer install --optimize-autoloader --no-scripts --no-interaction
 
-CMD ["apache2-foreground"]
+ENV SERVER_NAME=":8080"
+
+CMD ["frankenphp", "run", "--config", "/app/Caddyfile"]
