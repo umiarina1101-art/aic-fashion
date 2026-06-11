@@ -1,9 +1,14 @@
 <?php
 
-$conn = mysqli_connect("localhost","root","","aic_fashion");
+$host     = getenv('MYSQLHOST');
+$user     = getenv('MYSQLUSER');
+$password = getenv('MYSQLPASSWORD');
+$database = getenv('MYSQLDATABASE');
+$port     = getenv('MYSQLPORT') ?: 3306;
 
-if(!$conn){
-    die("Koneksi gagal : " . mysqli_connect_error());
+$conn = mysqli_connect($host, $user, $password, $database, (int)$port);
+
+if (!$conn) {
+    die("Koneksi gagal: " . mysqli_connect_error());
 }
-
 ?>
