@@ -1,16 +1,14 @@
 <?php
 
-$host = "localhost";
-$username = "root";
-$password = "";
-$database = "aic_fashion";
+$host     = getenv('MYSQLHOST')     ?: 'localhost';
+$user     = getenv('MYSQLUSER')     ?: 'root';
+$password = getenv('MYSQLPASSWORD') ?: '';
+$database = getenv('MYSQLDATABASE') ?: 'aic_fashion';
+$port     = getenv('MYSQLPORT')     ?: 3306;
 
-$conn = mysqli_connect($host, $username, $password, $database);
+$conn = mysqli_connect($host, $user, $password, $database, $port);
 
 if (!$conn) {
-    die("Koneksi database gagal: " . mysqli_connect_error());
+    die("Koneksi gagal: " . mysqli_connect_error());
 }
-
-echo "<h2>Koneksi Database Berhasil!</h2>";
-
 ?>
